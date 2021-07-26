@@ -16,3 +16,6 @@ create-vpc.py
 - associate routing-table & subnet & gateway
 
 
+## Bug
+1. Need apply 'Public ipv4 dhcp enable' to public subnet
+2. Need apply 'DNS hostname enable' to vpc
