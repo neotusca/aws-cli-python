@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
-import os
-import sys
+#import os
+#import sys
 import subprocess
 import json
 
-VPC_NET='172.93.0.0/16'
+VPC_NET='172.91.0.0/16'
 SUBNET=[]
-SUBNET.append('172.93.0.0/24')
-SUBNET.append('172.93.1.0/24')
-SUBNET.append('172.93.2.0/24')
-SUBNET.append('172.93.3.0/24')
-SUBNET.append('172.93.4.0/24')
-SUBNET.append('172.93.5.0/24')
+SUBNET.append('172.91.0.0/24')
+SUBNET.append('172.91.1.0/24')
+SUBNET.append('172.91.2.0/24')
+SUBNET.append('172.91.3.0/24')
+SUBNET.append('172.91.4.0/24')
+SUBNET.append('172.91.5.0/24')
 AZ=['ap-northeast-2a','ap-northeast-2c']
 
 
@@ -43,7 +43,7 @@ def cmd_execute(cmd):
     result_1 = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) 
     lines=''
     for line in result_1.stdout.readlines():
-        print(type(line),line)
+        #print(type(line),line)
         lines = lines + line
     dict_1 = json.loads(lines)
     return dict_1
@@ -82,8 +82,7 @@ def attach_igw(vpcid, igwid):
     result_1 = subprocess.Popen(cmd_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) 
     for line in result_1.stdout.readlines():
         lines = lines + line
-    print(lines)
-
+    #print(lines)
 
 def allocate_nat_eip():
     print('### 5. allocate_nat_eip')
@@ -101,7 +100,11 @@ def create_ngw(eipid, public_subnet):
 
 def create_routetable(vpcid, subnetids, igwid, ngwid):
     print('### 7. create_routetable')
-    print(vpcid, subnetids, igwid, ngwid)
+    print('VPC_ID : %s' % vpcid)
+    print('SUBNET_IDS : %s' % subnetids)
+    print('IGW_ID : %s' % igwid)
+    print('NGW_ID : %s' % ngwid)
+    #print(vpcid, subnetids, igwid, ngwid)
     count = len(subnetids)/2
     i=0
     k=0
@@ -112,7 +115,7 @@ def create_routetable(vpcid, subnetids, igwid, ngwid):
         cmd_string = 'aws ec2  create-route-table --vpc-id ' + vpcid
         json_str = cmd_execute(cmd_string)
         rtid = json_str['RouteTable']['RouteTableId']
-        print(rtid)
+        print("ROUTETABLE_ID : %s" % rtid)
 
         j=0
         while j < 2:
@@ -123,7 +126,7 @@ def create_routetable(vpcid, subnetids, igwid, ngwid):
             result_1 = subprocess.Popen(cmd_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) 
             for line in result_1.stdout.readlines():
                 lines = lines + line
-            print(lines)
+            #print(lines)
             j=j+1
             k=k+1
 
@@ -134,7 +137,7 @@ def create_routetable(vpcid, subnetids, igwid, ngwid):
             cmd_string = 'aws ec2  create-route   --route-table-id ' + rtid + '  --destination-cidr-block 0.0.0.0/0  --gateway-id  ' + ngwid
 
         json_str = cmd_execute(cmd_string)
-        print(json_str)
+        #print(json_str)
         i=i+1
 
 if __name__ == "__main__":
